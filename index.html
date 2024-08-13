@@ -28,9 +28,9 @@
 
 
 
-    <!-- <script src="./app.js"></script> -->
-     <script>
-     const alumuni = [
+  
+    <script>
+  const alumuni = [
   {
     text: '“I took the leap of faith, and it has massively changed my business. . . I want to be a business owner, not an operator.” ',
     name: '– COURTNEY EPPS',
@@ -87,14 +87,15 @@
     imgsrc: './assets/alumuniImg8.jpg',
     imgUrl: '#',
   },]
+
+
 // Alumni section variables
-// Alumni section variables
-const alumniSliderSpansContainer = document.querySelector('.alumuni .slider-spans-container')
-const alumniTextContainer = document.querySelector('.alumuni-text-container')
-let alumniCurrentIndex = 0
-let alumniAutoSlideInterval
-let isDragging = false
-let startX, endX
+const alumniSliderSpansContainer = document.querySelector('.alumuni .slider-spans-container');
+const alumniTextContainer = document.querySelector('.alumuni-text-container');
+let alumniCurrentIndex = 0;
+let alumniAutoSlideInterval;
+let isDragging = false;
+let startX, endX;
 
 // Create alumni HTML (same as before)
 function createAlumniHTML(alumnus) {
@@ -109,28 +110,26 @@ function createAlumniHTML(alumnus) {
         <p class="alumuni-occupation">${alumnus.occupation}</p>
       </div>
     </div>
-  `
+  `;
 }
-
-
 
 // Create slider span HTML
 function createAlumniSliderSpanHTML(index) {
-  return `<li class="slider-span-container" data-index="${index}"><span class="slider-span"></span></li>`
+  return `<li class="slider-span-container" data-index="${index}"><span class="slider-span"></span></li>`;
 }
 
 // Render alumni testimonials
-// Render alumni testimonials
-function renderAlumni() {
-     // Disable links while dragging
+function renderAlumni(animationClass) {
+  // Disable links while dragging
   const links = alumniTextContainer.querySelectorAll('a');
   links.forEach(link => link.style.pointerEvents = isDragging ? 'none' : 'auto');
+  
   // Update content
   alumniTextContainer.innerHTML = createAlumniHTML(alumuni[alumniCurrentIndex]);
   
-  // Add slide-right class to trigger the animation
+  // Add animation class to trigger the animation
   const alumniText = alumniTextContainer.querySelector('.alumuni-text');
-  alumniText.classList.add('slide-right');
+  alumniText.classList.add(animationClass);
   
   // Update the slider spans and active span
   alumniSliderSpansContainer.innerHTML = alumuni
@@ -139,82 +138,73 @@ function renderAlumni() {
   updateAlumniActiveSpan(alumniCurrentIndex); // Initialize the first testimonial
   initializeAlumniSliderSpanEventListeners(); // Reattach event listeners
 
-  // Remove slide-right class after animation completes to reset for next update
+  // Remove animation class after animation completes to reset for next update
   setTimeout(() => {
-    alumniText.classList.remove('slide-right');
+    alumniText.classList.remove(animationClass);
   }, 1000); // Adjust the delay to match your CSS animation duration
 }
 
-
-
 // Update active slider span
 function updateAlumniActiveSpan(index) {
-  const sliderSpans = document.querySelectorAll('.alumuni .slider-span-container')
+  const sliderSpans = document.querySelectorAll('.alumuni .slider-span-container');
   sliderSpans.forEach((container, idx) => {
-    const span = container.querySelector('.slider-span')
-    span.classList.toggle('active-slider-span', idx === index)
-  })
+    const span = container.querySelector('.slider-span');
+    span.classList.toggle('active-slider-span', idx === index);
+  });
 }
 
 // Reset animation class
 function resetAlumniAnimation() {
-  const alumniText = alumniTextContainer.querySelector('.alumuni-text')
-  alumniText.classList.remove('slide-right', 'slide-left')
+  const alumniText = alumniTextContainer.querySelector('.alumuni-text');
+  alumniText.classList.remove('slide-right', 'slide-left');
 }
 
 // Show next alumni
 function showNextAlumni() {
-  resetAlumniAnimation()
-  alumniTextContainer
-    .querySelector('.alumuni-text')
-    .classList.add('slide-right')
-
-  alumniCurrentIndex = (alumniCurrentIndex + 1) % alumuni.length
-  renderAlumni() // Update content and reattach event listeners
-  restartAlumniAutoSlide()
+  resetAlumniAnimation();
+  alumniCurrentIndex = (alumniCurrentIndex + 1) % alumuni.length;
+  renderAlumni('slide-right'); // Update content and reattach event listeners
+  restartAlumniAutoSlide();
 }
 
 // Show previous alumni
 function showPrevAlumni() {
-  resetAlumniAnimation()
-  alumniTextContainer
-    .querySelector('.alumuni-text')
-    .classList.add('slide-left')
-
-  alumniCurrentIndex = (alumniCurrentIndex - 1 + alumuni.length) % alumuni.length
-  renderAlumni() // Update content and reattach event listeners
-  restartAlumniAutoSlide()
+  resetAlumniAnimation();
+  alumniCurrentIndex = (alumniCurrentIndex - 1 + alumuni.length) % alumuni.length;
+  renderAlumni('slide-left'); // Update content and reattach event listeners
+  restartAlumniAutoSlide();
 }
 
 // Restart auto slide
 function restartAlumniAutoSlide() {
-  clearInterval(alumniAutoSlideInterval)
-  startAlumniAutoSlide()
+  clearInterval(alumniAutoSlideInterval);
+  startAlumniAutoSlide();
 }
 
 // Start auto slide
 function startAlumniAutoSlide() {
-  alumniAutoSlideInterval = setInterval(showNextAlumni, 2500)
+  alumniAutoSlideInterval = setInterval(showNextAlumni, 2500);
 }
 
 // Handle span click
 function handleAlumniSpanClick(index) {
   if (index !== alumniCurrentIndex) {
+    const animationClass = index > alumniCurrentIndex ? 'slide-right' : 'slide-left';
     alumniCurrentIndex = index;
     
     // Update content and reattach event listeners
-    renderAlumni();
+    renderAlumni(animationClass);
     
     // Ensure DOM updates before adding the class
     setTimeout(() => {
       const alumniText = alumniTextContainer.querySelector('.alumuni-text');
-      alumniText.classList.add('slide-right');
+      alumniText.classList.add(animationClass);
     }, 50); // Small delay to ensure DOM update before adding class
     
     // Remove the class after the animation completes
     setTimeout(() => {
       const alumniText = alumniTextContainer.querySelector('.alumuni-text');
-      alumniText.classList.remove('slide-right');
+      alumniText.classList.remove(animationClass);
     }, 1050); // 1000ms for animation + 50ms delay
     
     resetAlumniAnimation(); // Reset any previous animations
@@ -223,23 +213,24 @@ function handleAlumniSpanClick(index) {
   }
 }
 
-
-
 // Initialize slider span event listeners
 function initializeAlumniSliderSpanEventListeners() {
   document.querySelectorAll('.alumuni .slider-span-container').forEach((container) => {
     container.addEventListener('click', (e) => {
-      handleAlumniSpanClick(parseInt(container.dataset.index))
-    })
-  })
+      handleAlumniSpanClick(parseInt(container.dataset.index));
+    });
+  });
 }
 
 function handleAlumniTouchDragEvents() {
-  let startX, currentX, isDragging = false;
+  let startX, currentX;
+  let isDragging = false;
   
   alumniTextContainer.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX;
     isDragging = true;
+    disableAlumniLinks(true); // Disable links
+    disableTextSelection(true); // Prevent text selection
     clearInterval(alumniAutoSlideInterval);
   });
 
@@ -253,11 +244,15 @@ function handleAlumniTouchDragEvents() {
 
   alumniTextContainer.addEventListener('touchend', (e) => {
     handleAlumniDragEnd(e.changedTouches[0].clientX);
+    disableAlumniLinks(false); // Re-enable links
+    disableTextSelection(false); // Allow text selection
   });
 
   alumniTextContainer.addEventListener('mousedown', (e) => {
     startX = e.clientX;
     isDragging = true;
+    disableAlumniLinks(true); // Disable links
+    disableTextSelection(true); // Prevent text selection
     clearInterval(alumniAutoSlideInterval);
   });
 
@@ -271,11 +266,15 @@ function handleAlumniTouchDragEvents() {
 
   alumniTextContainer.addEventListener('mouseup', (e) => {
     handleAlumniDragEnd(e.clientX);
+    disableAlumniLinks(false); // Re-enable links
+    disableTextSelection(false); // Allow text selection
   });
 
   alumniTextContainer.addEventListener('mouseleave', (e) => {
     if (isDragging) {
       handleAlumniDragEnd(e.clientX);
+      disableAlumniLinks(false); // Re-enable links
+      disableTextSelection(false); // Allow text selection
     }
   });
 
@@ -301,15 +300,24 @@ function handleAlumniTouchDragEvents() {
       alumniTextContainer.style.transition = '';
     }, 200); // Shorter timeout after animation
   }
+
+  function disableAlumniLinks(disable) {
+    const links = alumniTextContainer.querySelectorAll('a');
+    links.forEach(link => link.style.pointerEvents = disable ? 'none' : 'auto');
+  }
+
+  function disableTextSelection(disable) {
+    alumniTextContainer.style.userSelect = disable ? 'none' : 'auto';
+  }
 }
 
 // Initialize the alumni slider
-renderAlumni()
-startAlumniAutoSlide()
-handleAlumniTouchDragEvents()
+renderAlumni('slide-right');
+startAlumniAutoSlide();
+handleAlumniTouchDragEvents();
+
 
 </script>
-    
-    
+
 </body>
 </html>
