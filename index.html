@@ -26,6 +26,15 @@
     </div>
 </section>
 
+<!--  -->
+<section id="modal">
+  
+  <div class="modal-video-container">
+    <span class="modal-close-icon"><i class='bx bx-x'></i></span>
+    <iframe src="https://www.youtube.com/embed/SL9a8V59p9M?si=-aJ49nFpqccYZHro" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+</section>
+
 
 
   
@@ -36,56 +45,56 @@
     name: '– COURTNEY EPPS',
     occupation: 'Owner of OTB Tax and author of More Relaxing, Less Taxing',
     imgsrc: './assets/alumuniImg1.png',
-    imgUrl: '#',
+    imgUrl: 'https://www.youtube.com/embed/SL9a8V59p9M?si=F0VAWJT6JT86uU2O',
   },
   {
     text: '“Business mastery is transformative. This is an opportunity to remove yourself from the weeds of your business and get ontop of your business.” ',
     name: '– Adelle Archer and Garrett Ozar',
     occupation: 'Co-founders of Eterneva',
     imgsrc: './assets/alumuniImg2.png',
-    imgUrl: '#',
+    imgUrl: 'https://www.youtube.com/embed/lWjgEtRTdv4?si=S7C63nBnu_RL09x7',
   },
   {
     text: `“The business doesn't devour me anymore. It doesn't own me. I have freedom. I realized that letting it go, trusting, and hiring people better than me will allow me the time to do what I'm good at.” `,
     name: '– Daniel Lanigan',
     occupation: 'Founder of Lord Hobo Brewing Co',
     imgsrc: './assets/alumuniImg3.png',
-    imgUrl: '#',
+    imgUrl: 'https://www.youtube.com/embed/IbzEA8AvsTM?si=_tQJ5rvZPTBlJEuC',
   },
   {
     text: '“We’re still in our first year officially, and we will hit right around a million dollars in revenue.” ',
     name: '-Brian McDonell',
     occupation: 'President/ Co-founder of Melin',
     imgsrc: './assets/alumuniImg4.png',
-    imgUrl: '#',
+    imgUrl: 'https://www.youtube.com/embed/ugBMtngUVfU?si=5dDI-D4RxtlkKoVp',
   },
   {
     text: '“Business Mastery for me was a gateway into a whole new life experience. I justified getting involved because I thought it would be a great business expense and a new experience. I didn’t realize that it was going to open the door to not only improve my business, but other businesses, new voices, new perspectives… It really just gave me a whole other set of options that are positive.” ',
     name: '-JASMINE PURSCELL',
     occupation: 'Residential Construction Business Owner',
     imgsrc: './assets/alumuniImg5.png',
-    imgUrl: '#',
+    imgUrl: 'https://www.youtube.com/embed/gSW7i9Bo6ZI?si=-cpZIbUYD7N79ny3',
   },
   {
     text: '“Business Mastery is fulfillment. It’s living out your dream, and it’s motivating others to do the same.” ',
     name: '-Cathy risigo wickline',
     occupation: 'Business owner, Occupational Therapist, Nutritionist',
     imgsrc: './assets/alumuniImg6.png',
-    imgUrl: '#',
+    imgUrl: 'https://www.youtube.com/embed/_pdU6G3KMn4?si=NTnsZcrHxahDPVmz',
   },
   {
     text: '“Going to a Tony Robbins event and learning those skills in a way we can impact, has been the difference between, has been the difference-maker between business to where I can go from being a 20 year old kid making $8-$10/hr to less than 5 years later being a millionaire.” ',
     name: '-Caleb Antonucci',
     occupation: 'Owner of OurWorldEnergy',
     imgsrc: './assets/alumuniImg7.png',
-    imgUrl: '#',
+    imgUrl: 'https://www.youtube.com/embed/RGCnbA_K9a4?si=ikCaWG9eK0aiIAKt',
   },
   {
     text: '“Business Mastery is an experience that allows you to overlay the essence of who you are and the nature of you with the opportunity to grow, make money and make an impact.” ',
     name: '-Liliana Gil Valletta',
     occupation: 'Business Owner',
     imgsrc: './assets/alumuniImg8.jpg',
-    imgUrl: '#',
+    imgUrl: 'https://www.youtube.com/embed/RGCnbA_K9a4?si=u1eTbwQjNkzYq-_R',
   },]
 
 
@@ -121,8 +130,8 @@ function createAlumniSliderSpanHTML(index) {
 // Render alumni testimonials
 function renderAlumni(animationClass) {
   // Disable links while dragging
-  const links = alumniTextContainer.querySelectorAll('a');
-  links.forEach(link => link.style.pointerEvents = isDragging ? 'none' : 'auto');
+  // const links = alumniTextContainer.querySelectorAll('a');
+  // links.forEach(link => link.style.pointerEvents = isDragging ? 'none' : 'auto');
   
   // Update content
   alumniTextContainer.innerHTML = createAlumniHTML(alumuni[alumniCurrentIndex]);
@@ -130,6 +139,32 @@ function renderAlumni(animationClass) {
   // Add animation class to trigger the animation
   const alumniText = alumniTextContainer.querySelector('.alumuni-text');
   alumniText.classList.add(animationClass);
+
+  function initializeImageClickEvents() {
+    const container = document.querySelector('.alumuni-container');
+   
+    
+    if (container) {
+      
+      container.addEventListener('click', function(event) {
+        const clickedElement = event.target;
+          const parentAlumniText = clickedElement.closest('.alumuni-text');
+
+          if (parentAlumniText) {
+            // Find the 'a' tag within this parent
+            const link = parentAlumniText.querySelector('a');
+            if (link) {
+              const videoUrl = link.href;
+              // Open the modal with the video URL
+              console.log(videoUrl);
+              
+              openModalWithVideo(videoUrl);
+            }
+          }
+      });
+    }
+  }
+  initializeImageClickEvents();
   
   // Update the slider spans and active span
   alumniSliderSpansContainer.innerHTML = alumuni
@@ -316,8 +351,122 @@ renderAlumni('slide-right');
 startAlumniAutoSlide();
 handleAlumniTouchDragEvents();
 
+  // Function to open the modal with the relevant video
+  function openModalWithVideo(videoUrl) {
+    const modal = document.getElementById('modal');
+    const iframe = modal.querySelector('iframe');
+
+    // Set the iframe src to the video URL
+    iframe.src = videoUrl;
+
+    // Display the modal
+    modal.style.display = 'block';
+  }
+
+  // Function to close the modal
+  function closeModal() {
+    const modal = document.getElementById('modal');
+    const iframe = modal.querySelector('iframe');
+
+    // Stop the video by removing the src
+    iframe.src = '';
+
+    // Hide the modal
+    modal.style.display = 'none';
+  }
+
+   document.addEventListener('DOMContentLoaded', () => {
+    const closeModalIcon = document.querySelector('.modal-close-icon');
+    if (closeModalIcon) {
+      closeModalIcon.addEventListener('click', closeModal);
+    }
+  });
+
 
 </script>
+
+
+
+<script>
+  const alumniMedia = [
+  { imgsrc: './assets/alumuniImg1.png', imgUrl: 'https://www.youtube.com/embed/SL9a8V59p9M?si=F0VAWJT6JT86uU2O' },
+  { imgsrc: './assets/alumuniImg2.png', imgUrl: 'https://www.youtube.com/embed/lWjgEtRTdv4?si=S7C63nBnu_RL09x7' },
+  { imgsrc: './assets/alumuniImg3.png', imgUrl: 'https://www.youtube.com/embed/IbzEA8AvsTM?si=_tQJ5rvZPTBlJEuC' },
+  { imgsrc: './assets/alumuniImg4.png', imgUrl: 'https://www.youtube.com/embed/ugBMtngUVfU?si=5dDI-D4RxtlkKoVp' },
+  { imgsrc: './assets/alumuniImg5.png', imgUrl: 'https://www.youtube.com/embed/gSW7i9Bo6ZI?si=-cpZIbUYD7N79ny3' },
+  { imgsrc: './assets/alumuniImg6.png', imgUrl: 'https://www.youtube.com/embed/_pdU6G3KMn4?si=NTnsZcrHxahDPVmz' },
+  { imgsrc: './assets/alumuniImg7.png', imgUrl: 'https://www.youtube.com/embed/RGCnbA_K9a4?si=ikCaWG9eK0aiIAKt' },
+  { imgsrc: './assets/alumuniImg8.jpg', imgUrl: 'https://www.youtube.com/embed/RGCnbA_K9a4?si=u1eTbwQjNkzYq-_R' }
+];
+
+ document.addEventListener('DOMContentLoaded', () => {
+    const alumniMedia = [
+      { imgsrc: './assets/alumuniImg1.png', imgUrl: 'https://www.youtube.com/embed/SL9a8V59p9M?si=F0VAWJT6JT86uU2O' },
+      { imgsrc: './assets/alumuniImg2.png', imgUrl: 'https://www.youtube.com/embed/lWjgEtRTdv4?si=S7C63nBnu_RL09x7' },
+      { imgsrc: './assets/alumuniImg3.png', imgUrl: 'https://www.youtube.com/embed/IbzEA8AvsTM?si=_tQJ5rvZPTBlJEuC' },
+      { imgsrc: './assets/alumuniImg4.png', imgUrl: 'https://www.youtube.com/embed/ugBMtngUVfU?si=5dDI-D4RxtlkKoVp' },
+      { imgsrc: './assets/alumuniImg5.png', imgUrl: 'https://www.youtube.com/embed/gSW7i9Bo6ZI?si=-cpZIbUYD7N79ny3' },
+      { imgsrc: './assets/alumuniImg6.png', imgUrl: 'https://www.youtube.com/embed/_pdU6G3KMn4?si=NTnsZcrHxahDPVmz' },
+      { imgsrc: './assets/alumuniImg7.png', imgUrl: 'https://www.youtube.com/embed/RGCnbA_K9a4?si=ikCaWG9eK0aiIAKt' },
+      { imgsrc: './assets/alumuniImg8.jpg', imgUrl: 'https://www.youtube.com/embed/RGCnbA_K9a4?si=u1eTbwQjNkzYq-_R' }
+    ];
+
+    function openModalWithVideo(videoUrl) {
+      const modal = document.getElementById('modal');
+      const iframe = modal.querySelector('iframe');
+  
+      iframe.src = videoUrl;
+      modal.style.display = 'block';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      const iframe = modal.querySelector('iframe');
+
+      iframe.src = '';
+      modal.style.display = 'none';
+    }
+
+    function initializeImageClickEvents() {
+      const alumniContainer = document.querySelector('.alumuni-text-container');
+      
+      
+      
+      if (!alumniContainer) {
+        console.error('Alumni container not found!');
+        return;
+      }
+
+      alumniContainer.addEventListener('click', function (event) {
+        const clickedElement = event.target;
+        
+
+        if (clickedElement.tagName === 'IMG') {
+          const imgsrc = clickedElement.src.replace(window.location.origin + '/', '');
+          const foundMedia = alumniMedia.find(media => media.imgsrc === imgsrc);
+
+          if (foundMedia) {
+            openModalWithVideo(foundMedia.imgUrl);
+          } else {
+            console.log('Media not found for src:', imgsrc);
+          }
+        }
+      });
+
+      const closeModalIcon = document.querySelector('.modal-close-icon');
+      if (closeModalIcon) {
+        closeModalIcon.addEventListener('click', closeModal);
+      } else {
+        console.error('Close modal icon not found!');
+      }
+    }
+
+    initializeImageClickEvents();
+  });
+
+</script>
+
+
 
 </body>
 </html>
